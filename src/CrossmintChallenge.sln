@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrossmintChallenge.Host", "CrossmintChallenge.Host\CrossmintChallenge.Host.csproj", "{89C74F49-FDC5-466C-BCE8-C9B159A9472C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrossmintChallenge.Test", "CrossmintChallenge.Test\CrossmintChallenge.Test.csproj", "{C3C877D6-CB60-448D-9D68-F01942BE6CC6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{89C74F49-FDC5-466C-BCE8-C9B159A9472C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89C74F49-FDC5-466C-BCE8-C9B159A9472C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89C74F49-FDC5-466C-BCE8-C9B159A9472C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3C877D6-CB60-448D-9D68-F01942BE6CC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3C877D6-CB60-448D-9D68-F01942BE6CC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3C877D6-CB60-448D-9D68-F01942BE6CC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3C877D6-CB60-448D-9D68-F01942BE6CC6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

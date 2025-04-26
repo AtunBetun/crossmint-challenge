@@ -14,6 +14,6 @@ public class Program
 
         Log.Information("starting host");
         IHost host = HostBuilder.CreateHost().Build();
-        await host.StartAsync();
+        await host.RunAsync();
     }
 }
