@@ -7,9 +7,9 @@ namespace CrossmintChallenge.Host.Services;
 
 public class Processor
 {
-    static Url challengeUrl() => new Url("https://challenge.crossmint.io/api");
+    public static Url ChallengeUrl() => new Url("https://challenge.crossmint.io/api");
 
-    const string CandidateId = "9b5772ff-aa4e-4870-956c-9e0332789869";
+    public const string CandidateId = "9b5772ff-aa4e-4870-956c-9e0332789869";
 
     public MegaverseClient MegaverseMapClient { get; init; }
 
@@ -17,7 +17,6 @@ public class Processor
     {
         MegaverseMapClient = megaverseMapClient.NotNull();
     }
-
 
     // TODO:
     // 1. Get the map goal
@@ -32,7 +31,7 @@ public class Processor
         Log.Information("starting processor");
 
         Log.Information("getting goal for polyanets");
-        var mapGoal = await MegaverseMapClient.GetMapGoalAsync(challengeUrl(), CandidateId);
+        var mapGoal = await MegaverseMapClient.GetMapGoalAsync(ChallengeUrl(), CandidateId);
 
         if (createTestScenario)
         {
@@ -43,11 +42,11 @@ public class Processor
 
         Log.Information("deleting extra polyanets");
         MapResponse mapResponse = await MegaverseMapClient
-            .GetMapAsync(challengeUrl(), CandidateId)
+            .GetMapAsync(ChallengeUrl(), CandidateId)
             .NotNull();
 
-        int polyanetsForDeletion = mapResponse.Map.Content
-            .SelectMany(row => row)
+        int polyanetsForDeletion = mapResponse
+            .Map.Content.SelectMany(row => row)
             .Count(cell => cell != null);
         while (polyanetsForDeletion > 0)
         {
@@ -58,13 +57,12 @@ public class Processor
                 MegaverseMapClient.DeletePolyanetAsync
             );
             mapResponse = await MegaverseMapClient
-                .GetMapAsync(challengeUrl(), CandidateId)
+                .GetMapAsync(ChallengeUrl(), CandidateId)
                 .NotNull();
             Log.Debug("{@mapResponse}", mapResponse);
-            polyanetsForDeletion = mapResponse.Map.Content
-                .SelectMany(row => row)
+            polyanetsForDeletion = mapResponse
+                .Map.Content.SelectMany(row => row)
                 .Count(cell => cell != null);
-
         }
 
         Log.Information("{@mapGoal}", mapGoal);
@@ -87,9 +85,7 @@ public class Processor
         {
             var batch = polyanets.Skip(i).Take(batchSize).ToList();
             var tasks = batch
-                .Select(poly =>
-                    task(challengeUrl(), poly.Row, poly.Col, CandidateId)
-                )
+                .Select(poly => task(ChallengeUrl(), poly.Row, poly.Col, CandidateId))
                 .ToList();
 
             await Task.WhenAll(tasks);
@@ -101,5 +97,4 @@ public class Processor
             }
         }
     }
-
 }

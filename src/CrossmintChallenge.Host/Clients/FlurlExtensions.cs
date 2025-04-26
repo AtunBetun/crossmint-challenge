@@ -1,5 +1,4 @@
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using Flurl.Http;
 using Flurl.Http.Configuration;
 using Flurl.Http.Content;
@@ -8,15 +7,12 @@ namespace CrossmintChallenge.Clients;
 
 public static class FlurlExtensions
 {
-    public static IFlurlRequest WithJsonSettings(this IFlurlRequest request) =>
+    public static IFlurlRequest WithJsonSettings(
+        this IFlurlRequest request,
+        JsonSerializerOptions options
+    ) =>
         request.WithSettings(settings =>
         {
-            JsonSerializerOptions options = new JsonSerializerOptions
-            {
-                WriteIndented = true,
-                PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
-            };
-            options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
             settings.JsonSerializer = new DefaultJsonSerializer(options);
         });
 
@@ -33,5 +29,4 @@ public static class FlurlExtensions
         );
         return request.SendAsync(HttpMethod.Delete, content, completionOption, cancellationToken);
     }
-
 }

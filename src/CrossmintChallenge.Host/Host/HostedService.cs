@@ -1,5 +1,5 @@
-using Microsoft.Extensions.Hosting;
 using CrossmintChallenge.Host.Services;
+using Microsoft.Extensions.Hosting;
 
 namespace CrossmintChallenge.Host;
 

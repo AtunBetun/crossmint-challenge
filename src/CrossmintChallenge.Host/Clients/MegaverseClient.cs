@@ -12,6 +12,15 @@ public enum GoalItem
 {
     SPACE,
     POLYANET,
+    BLUE_SOLOON,
+    DOWN_COMETH,
+    LEFT_COMETH,
+    PURPLE_SOLOON,
+    RED_SOLOON,
+    RIGHT_COMET,
+    RIGHT_COMETH,
+    UP_COMETH,
+    WHITE_SOLOON,
 }
 
 public record MapResponse(Map Map);
@@ -24,7 +33,29 @@ public record Map(
     int __v
 );
 
-public record CellContent(int Type);
+// 0 => polyanet
+// 1 => soloon
+//      colors: purple, red white, blue
+// 2 => cometh
+//      direction: up, right, down, left
+
+public enum ColorEnum
+{
+    purple,
+    red,
+    white,
+    blue,
+}
+
+public enum DirectionEnum
+{
+    up,
+    right,
+    down,
+    left,
+}
+
+public record CellContent(int Type, DirectionEnum? Direction, ColorEnum? Color);
 
 public class MegaverseClient
 {
@@ -44,7 +75,7 @@ public class MegaverseClient
 
         var result = await FlurlClient
             .Request(url)
-            .WithJsonSettings()
+            .WithJsonSettings(SerializerFactory.CreateOptions())
             .GetJsonAsync<MapGoalResponse>();
         Log.Debug("{@result}", result);
         return result;
@@ -53,7 +84,10 @@ public class MegaverseClient
     public async Task<MapResponse> GetMapAsync(Url challengeUrl, string candidateId)
     {
         Url url = challengeUrl.AppendPathSegments("map").AppendPathSegments(candidateId);
-        var result = await FlurlClient.Request(url).GetJsonAsync<MapResponse>();
+        var result = await FlurlClient
+            .Request(url)
+            .WithJsonSettings(SerializerFactory.CreateOptions())
+            .GetJsonAsync<MapResponse>();
         Log.Debug("{@result}", result);
         return result;
     }

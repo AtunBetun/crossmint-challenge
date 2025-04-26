@@ -7,11 +7,7 @@ public class Program
 {
     static async Task Main(string[] args)
     {
-        Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Debug()
-            .WriteTo.Console()
-            .CreateLogger();
-
+        LogFactory.Create();
         Log.Information("starting host");
         IHost host = HostBuilder.CreateHost().Build();
         await host.RunAsync();

@@ -50,6 +50,8 @@ public class PollyHandler : DelegatingHandler
         CancellationToken cancellationToken
     )
     {
-        return await Retry.BuildRetryPolicy().ExecuteAsync(ct => base.SendAsync(request, ct), cancellationToken);
+        return await Retry
+            .BuildRetryPolicy()
+            .ExecuteAsync(ct => base.SendAsync(request, ct), cancellationToken);
     }
 }

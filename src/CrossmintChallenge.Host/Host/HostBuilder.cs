@@ -23,7 +23,6 @@ public static class HostBuilder
         services.AddTransient<PollyHandler>();
         services.AddHostedService<HostedService>();
         return services;
-
     }
 
     public static IServiceCollection AddHttpClients(this IServiceCollection services)
@@ -34,13 +33,10 @@ public static class HostBuilder
                 null,
                 builder =>
                 {
-                    builder.AddMiddleware(
-                        () => sp.GetRequiredService<PollyHandler>()
-                    );
+                    builder.AddMiddleware(() => sp.GetRequiredService<PollyHandler>());
                 }
             )
         );
         return services;
-
     }
 }
