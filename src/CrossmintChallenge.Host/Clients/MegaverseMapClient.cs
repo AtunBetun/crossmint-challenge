@@ -26,13 +26,13 @@ public record Map(
 
 public record CellContent(int Type);
 
-public class MegaverseMapClient
+public class MegaverseClient
 {
     public IFlurlClient FlurlClient { get; init; }
 
-    public MegaverseMapClient(IFlurlClientCache flurlClientCache)
+    public MegaverseClient(IFlurlClientCache flurlClientCache)
     {
-        FlurlClient = flurlClientCache.NotNull().Get(nameof(MegaverseMapClient)).NotNull();
+        FlurlClient = flurlClientCache.NotNull().Get(nameof(MegaverseClient)).NotNull();
     }
 
     public async Task<MapGoalResponse> GetMapGoalAsync(Url challengeUrl, string candidateId)
@@ -76,7 +76,7 @@ public class MegaverseMapClient
         Log.Debug("Deleting POLYANET at ({Row}, {Column})", row, column);
         var response = await FlurlClient
             .Request(url)
-            .WithHeader("Accept", "application/x-www-form-urlencoded")
+            .WithHeader("Accept", "application/x-www-form-urlencoded") // TODO: extract to method
             .DeleteUrlEncodedAsync(formData);
 
         Log.Debug("Deleted POLYANET at ({Row}, {Column})", row, column);

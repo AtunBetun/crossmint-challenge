@@ -11,12 +11,21 @@ public class Processor
 
     const string CandidateId = "9b5772ff-aa4e-4870-956c-9e0332789869";
 
-    public MegaverseMapClient MegaverseMapClient { get; init; }
+    public MegaverseClient MegaverseMapClient { get; init; }
 
-    public Processor(MegaverseMapClient megaverseMapClient)
+    public Processor(MegaverseClient megaverseMapClient)
     {
         MegaverseMapClient = megaverseMapClient.NotNull();
     }
+
+
+    // TODO:
+    // 1. Get the map goal
+    // While (Map != Goal)
+    //      2. get current map
+    //      3. Mapper => get Deletes and Posts
+    //      4. Loop doing Deletes and Posts
+    //
 
     public async Task Execute(bool createTestScenario = true)
     {
