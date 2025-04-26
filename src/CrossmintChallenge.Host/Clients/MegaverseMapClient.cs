@@ -1,5 +1,7 @@
+using CrossmintChallenge.Host;
 using Flurl;
 using Flurl.Http;
+using Flurl.Http.Configuration;
 using Serilog;
 
 namespace CrossmintChallenge.Clients;
@@ -24,29 +26,39 @@ public record Map(
 
 public record CellContent(int Type);
 
-public static class MegaverseMapClient
+public class MegaverseMapClient
 {
-    public static async Task<MapGoalResponse> GetMapGoalAsync(Url challengeUrl, string candidateId)
+    public RetryFlurlClient FlurlClient { get; init; }
+
+    public MegaverseMapClient(IFlurlClientCache flurlClientCache)
+    {
+        FlurlClient = flurlClientCache.NotNull().Get(nameof(MegaverseMapClient)).NotNull();
+    }
+
+    public async Task<MapGoalResponse> GetMapGoalAsync(Url challengeUrl, string candidateId)
     {
         Url url = challengeUrl
             .AppendPathSegments("map")
             .AppendPathSegments(candidateId)
             .AppendPathSegments("goal");
 
-        var result = await url.WithJsonSettings().GetJsonAsync<MapGoalResponse>();
+        var result = await FlurlClient
+            .Request(url)
+            .WithJsonSettings()
+            .GetJsonAsync<MapGoalResponse>();
         Log.Debug("{@result}", result);
         return result;
     }
 
-    public static async Task<MapResponse> GetMapAsync(Url challengeUrl, string candidateId)
+    public async Task<MapResponse> GetMapAsync(Url challengeUrl, string candidateId)
     {
         Url url = challengeUrl.AppendPathSegments("map").AppendPathSegments(candidateId);
-        var result = await url.GetJsonAsync<MapResponse>();
+        var result = await FlurlClient.Request(url).GetJsonAsync<MapResponse>();
         Log.Debug("{@result}", result);
         return result;
     }
 
-    public static async Task DeletePolyanetAsync(
+    public async Task<IFlurlResponse> DeletePolyanetAsync(
         Url challengeUrl,
         int row,
         int column,
@@ -60,12 +72,23 @@ public static class MegaverseMapClient
             { "column", column.ToString() },
             { "candidateId", candidateId },
         };
-        var response = await url.WithHeader("Accept", "application/x-www-form-urlencoded")
+
+        Log.Debug("Deleting POLYANET at ({Row}, {Column})", row, column);
+        var response = await FlurlClient
+            .Request(url)
+            .WithHeader("Accept", "application/x-www-form-urlencoded")
             .DeleteUrlEncodedAsync(formData);
-        Log.Debug("Deleted POLYANET at ({Row}, {Column}): {@Response}", row, column, response);
+
+        Log.Debug("Deleted POLYANET at ({Row}, {Column})", row, column);
+        return response;
     }
 
-    public static async Task PostPolyanetAsync(Url challengeUrl, int row, int column, string candidateId)
+    public async Task<IFlurlResponse> PostPolyanetAsync(
+        Url challengeUrl,
+        int row,
+        int column,
+        string candidateId
+    )
     {
         Url url = challengeUrl.AppendPathSegment("polyanets");
         var formData = new Dictionary<string, string>
@@ -74,8 +97,13 @@ public static class MegaverseMapClient
             { "column", column.ToString() },
             { "candidateId", candidateId },
         };
-        var response = await url.WithHeader("Accept", "application/x-www-form-urlencoded")
+
+        Log.Debug("Posting POLYANET at ({Row}, {Column})", row, column);
+        var response = await FlurlClient
+            .Request(url)
+            .WithHeader("Accept", "application/x-www-form-urlencoded")
             .PostUrlEncodedAsync(formData);
-        Log.Debug("Posted POLYANET at ({Row}, {Column}): {@Response}", row, column, response);
+        Log.Debug("Posted POLYANET at ({Row}, {Column})", row, column);
+        return response;
     }
 }
