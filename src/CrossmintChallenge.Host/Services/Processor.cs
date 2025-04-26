@@ -39,12 +39,9 @@ public class Processor
             .GetMapAsync(challengeUrl(), CandidateId)
             .NotNull();
 
-        int polyanetsForDeletion = mapResponse
-            .Map.Content.Select(listCellContent =>
-                listCellContent.Where(cellContent => cellContent != null)
-            )
-            .ToList()
-            .Count;
+        int polyanetsForDeletion = mapResponse.Map.Content
+            .SelectMany(row => row)
+            .Count(cell => cell != null);
         while (polyanetsForDeletion > 0)
         {
             Log.Information("{@polyanetsForDeletion} to delete", polyanetsForDeletion);
@@ -57,13 +54,10 @@ public class Processor
                 .GetMapAsync(challengeUrl(), CandidateId)
                 .NotNull();
             Log.Debug("{@mapResponse}", mapResponse);
+            polyanetsForDeletion = mapResponse.Map.Content
+                .SelectMany(row => row)
+                .Count(cell => cell != null);
 
-            polyanetsForDeletion = mapResponse
-                .Map.Content.Select(listCellContent =>
-                    listCellContent.Where(cellContent => cellContent != null)
-                )
-                .ToList()
-                .Count;
         }
 
         // await DeleteAllPolyanetsAsync(mapResponse);
@@ -105,8 +99,8 @@ public class Processor
 
             if (i + batchSize < polyanets.Count)
             {
-                Log.Information("Batch complete, waiting 10 seconds before next batch...");
-                await Task.Delay(TimeSpan.FromSeconds(10));
+                Log.Information("Batch complete, waiting 1 seconds before next batch...");
+                await Task.Delay(TimeSpan.FromSeconds(1));
             }
         }
     }

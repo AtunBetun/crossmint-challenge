@@ -26,10 +26,10 @@ public static class Retry
         var retryPolicy = Policy<HttpResponseMessage>
             .HandleResult(result => IsTransientError(result))
             .WaitAndRetryAsync(
-                15,
+                40,
                 retryAttempt =>
                 {
-                    var nextAttemptIn = TimeSpan.FromSeconds(10);
+                    var nextAttemptIn = TimeSpan.FromSeconds(1);
                     Log.Error(
                         "Retry attempt {@retryAttempt} to make request. Next try on {@nextAttemptIn} seconds.",
                         retryAttempt,
@@ -50,7 +50,6 @@ public class PollyHandler : DelegatingHandler
         CancellationToken cancellationToken
     )
     {
-        Log.Debug("using polly handler");
         return await Retry.BuildRetryPolicy().ExecuteAsync(ct => base.SendAsync(request, ct), cancellationToken);
     }
 }
