@@ -28,7 +28,7 @@ public record CellContent(int Type);
 
 public class MegaverseMapClient
 {
-    public RetryFlurlClient FlurlClient { get; init; }
+    public IFlurlClient FlurlClient { get; init; }
 
     public MegaverseMapClient(IFlurlClientCache flurlClientCache)
     {

@@ -1,5 +1,4 @@
 using System.Net;
-using Flurl.Http;
 using Polly;
 using Polly.Retry;
 using Serilog;
@@ -9,7 +8,7 @@ namespace CrossmintChallenge.Clients;
 // https://brunomj.medium.com/net-5-0-resilient-http-client-with-polly-and-flurl-b7de936fd70c
 public static class Retry
 {
-    public static bool IsTransientError(FlurlHttpException exception)
+    public static bool IsTransientError(HttpResponseMessage response)
     {
         int[] httpStatusCodesWorthRetrying =
         {
@@ -19,15 +18,13 @@ public static class Retry
             (int)HttpStatusCode.ServiceUnavailable, // 503
             (int)HttpStatusCode.GatewayTimeout, // 504
         };
-
-        return exception.StatusCode.HasValue
-            && httpStatusCodesWorthRetrying.Contains(exception.StatusCode.Value);
+        return httpStatusCodesWorthRetrying.Contains((int)response.StatusCode);
     }
 
-    public static AsyncRetryPolicy BuildRetryPolicy()
+    public static AsyncRetryPolicy<HttpResponseMessage> BuildRetryPolicy()
     {
-        var retryPolicy = Policy
-            .Handle<FlurlHttpException>(IsTransientError)
+        var retryPolicy = Policy<HttpResponseMessage>
+            .HandleResult(result => IsTransientError(result))
             .WaitAndRetryAsync(
                 15,
                 retryAttempt =>
@@ -53,8 +50,7 @@ public class PollyHandler : DelegatingHandler
         CancellationToken cancellationToken
     )
     {
-        return await Retry
-            .BuildRetryPolicy()
-            .ExecuteAsync(async () => await base.SendAsync(request, cancellationToken));
+        Log.Debug("using polly handler");
+        return await Retry.BuildRetryPolicy().ExecuteAsync(ct => base.SendAsync(request, ct), cancellationToken);
     }
 }

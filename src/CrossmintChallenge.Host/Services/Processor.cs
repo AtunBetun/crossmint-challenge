@@ -91,15 +91,13 @@ public class Processor
     {
         Log.Information("mutating polyanets {@polyanets} {@task}", polyanets, task.Method.Name);
 
-        const int batchSize = 5;
+        const int batchSize = 10;
         for (int i = 0; i < polyanets.Count; i += batchSize)
         {
             var batch = polyanets.Skip(i).Take(batchSize).ToList();
             var tasks = batch
                 .Select(poly =>
-                    Retry
-                        .BuildRetryPolicy()
-                        .ExecuteAsync(() => task(challengeUrl(), poly.Row, poly.Col, CandidateId))
+                    task(challengeUrl(), poly.Row, poly.Col, CandidateId)
                 )
                 .ToList();
 

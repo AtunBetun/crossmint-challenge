@@ -38,22 +38,6 @@ public static class FlurlExtensions
         return request.SendAsync(HttpMethod.Delete, content, completionOption, cancellationToken);
     }
 
-    public static Task<IFlurlResponse> SendRetryAsync(
-        this IFlurlRequest request,
-        HttpMethod verb,
-        HttpContent content = null,
-        HttpCompletionOption completionOption = HttpCompletionOption.ResponseContentRead,
-        CancellationToken cancellationToken = default(CancellationToken)
-    )
-    {
-        return Retry
-            .BuildRetryPolicy()
-            .ExecuteAsync(
-                async () =>
-                    await request.SendAsync(verb, content, completionOption, cancellationToken)
-            );
-    }
-
     // https://brunomj.medium.com/net-5-0-resilient-http-client-with-polly-and-flurl-b7de936fd70c
     public static bool IsTransientError(FlurlHttpException exception)
     {

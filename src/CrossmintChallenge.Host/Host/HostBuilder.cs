@@ -13,19 +13,34 @@ public static class HostBuilder
             .Extensions.Hosting.Host.CreateDefaultBuilder()
             .ConfigureServices(services =>
             {
-                services.AddTransient<Processor>();
-                services.AddTransient<MegaverseMapClient>();
-                services.AddTransient<PollyHandler>();
-                services.AddSingleton<IFlurlClientCache>(sp =>
-                    new FlurlClientCache().Add(
-                        nameof(MegaverseMapClient),
-                        null,
-                        builder =>
-                        {
-                            builder.AddMiddleware(sp.GetRequiredService<PollyHandler>);
-                        }
-                    )
-                );
-                services.AddHostedService<HostedService>();
+                services.AddServices().AddHttpClients();
             });
+
+    public static IServiceCollection AddServices(this IServiceCollection services)
+    {
+        services.AddTransient<Processor>();
+        services.AddTransient<MegaverseMapClient>();
+        services.AddTransient<PollyHandler>();
+        services.AddHostedService<HostedService>();
+        return services;
+
+    }
+
+    public static IServiceCollection AddHttpClients(this IServiceCollection services)
+    {
+        services.AddSingleton<IFlurlClientCache>(sp =>
+            new FlurlClientCache().Add(
+                nameof(MegaverseMapClient),
+                null,
+                builder =>
+                {
+                    builder.AddMiddleware(
+                        () => sp.GetRequiredService<PollyHandler>()
+                    );
+                }
+            )
+        );
+        return services;
+
+    }
 }
