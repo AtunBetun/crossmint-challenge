@@ -6,57 +6,6 @@ using Serilog;
 
 namespace CrossmintChallenge.Clients;
 
-public record MapGoalResponse(List<List<GoalItem>> Goal);
-
-public enum GoalItem
-{
-    SPACE,
-    POLYANET,
-    BLUE_SOLOON,
-    DOWN_COMETH,
-    LEFT_COMETH,
-    PURPLE_SOLOON,
-    RED_SOLOON,
-    RIGHT_COMET,
-    RIGHT_COMETH,
-    UP_COMETH,
-    WHITE_SOLOON,
-}
-
-public record MapResponse(Map Map);
-
-public record Map(
-    string _id,
-    List<List<CellContent?>> Content,
-    string CandidateId,
-    int Phase,
-    int __v
-);
-
-// 0 => polyanet
-// 1 => soloon
-//      colors: purple, red white, blue
-// 2 => cometh
-//      direction: up, right, down, left
-
-public enum ColorEnum
-{
-    purple,
-    red,
-    white,
-    blue,
-}
-
-public enum DirectionEnum
-{
-    up,
-    right,
-    down,
-    left,
-}
-
-public record CellContent(int Type, DirectionEnum? Direction, ColorEnum? Color);
-
 public class MegaverseClient
 {
     public IFlurlClient FlurlClient { get; init; }
@@ -92,6 +41,30 @@ public class MegaverseClient
         return result;
     }
 
+    public async Task<IFlurlResponse> PostPolyanetAsync(
+        Url challengeUrl,
+        int row,
+        int column,
+        string candidateId
+    )
+    {
+        Url url = challengeUrl.AppendPathSegment(MegaverseStarsEnum.polyanet.ToString());
+        var formData = new Dictionary<string, string>
+        {
+            { "row", row.ToString() },
+            { "column", column.ToString() },
+            { "candidateId", candidateId },
+        };
+
+        Log.Debug("Posting POLYANET at ({Row}, {Column})", row, column);
+        var response = await FlurlClient
+            .Request(url)
+            .WithHeader("Accept", "application/x-www-form-urlencoded")
+            .PostUrlEncodedAsync(formData);
+        Log.Debug("Posted POLYANET at ({Row}, {Column})", row, column);
+        return response;
+    }
+
     public async Task<IFlurlResponse> DeletePolyanetAsync(
         Url challengeUrl,
         int row,
@@ -99,7 +72,7 @@ public class MegaverseClient
         string candidateId
     )
     {
-        Url url = challengeUrl.AppendPathSegment("polyanets");
+        Url url = challengeUrl.AppendPathSegment(MegaverseStarsEnum.polyanet.ToString());
         var formData = new Dictionary<string, string>
         {
             { "row", row.ToString() },
@@ -117,14 +90,40 @@ public class MegaverseClient
         return response;
     }
 
-    public async Task<IFlurlResponse> PostPolyanetAsync(
+    public async Task<IFlurlResponse> PostSoloonAsync(
+        Url challengeUrl,
+        ColorEnum color,
+        int row,
+        int column,
+        string candidateId
+    )
+    {
+        Url url = challengeUrl.AppendPathSegment(MegaverseStarsEnum.soloon.ToString());
+        var formData = new Dictionary<string, string>
+        {
+            { "row", row.ToString() },
+            { "column", column.ToString() },
+            { "color", color.ToString() },
+            { "candidateId", candidateId },
+        };
+
+        Log.Debug("Posting SOLOON at ({Row}, {Column})", row, column);
+        var response = await FlurlClient
+            .Request(url)
+            .WithHeader("Accept", "application/x-www-form-urlencoded")
+            .PostUrlEncodedAsync(formData);
+        Log.Debug("Posted SOLOON at ({Row}, {Column})", row, column);
+        return response;
+    }
+
+    public async Task<IFlurlResponse> DeleteSoloonAsync(
         Url challengeUrl,
         int row,
         int column,
         string candidateId
     )
     {
-        Url url = challengeUrl.AppendPathSegment("polyanets");
+        Url url = challengeUrl.AppendPathSegment(MegaverseStarsEnum.soloon.ToString());
         var formData = new Dictionary<string, string>
         {
             { "row", row.ToString() },
@@ -132,12 +131,62 @@ public class MegaverseClient
             { "candidateId", candidateId },
         };
 
-        Log.Debug("Posting POLYANET at ({Row}, {Column})", row, column);
+        Log.Debug("Deleteing SOLOON at ({Row}, {Column})", row, column);
+        var response = await FlurlClient
+            .Request(url)
+            .WithHeader("Accept", "application/x-www-form-urlencoded")
+            .DeleteUrlEncodedAsync(formData);
+        Log.Debug("Deleted SOLOON at ({Row}, {Column})", row, column);
+        return response;
+    }
+
+    public async Task<IFlurlResponse> PostComethAsync(
+        Url challengeUrl,
+        DirectionEnum direction,
+        int row,
+        int column,
+        string candidateId
+    )
+    {
+        Url url = challengeUrl.AppendPathSegment(MegaverseStarsEnum.cometh.ToString());
+        var formData = new Dictionary<string, string>
+        {
+            { "row", row.ToString() },
+            { "column", column.ToString() },
+            { "direction", direction.ToString() },
+            { "candidateId", candidateId },
+        };
+
+        Log.Debug("Posting SOLOON at ({Row}, {Column})", row, column);
         var response = await FlurlClient
             .Request(url)
             .WithHeader("Accept", "application/x-www-form-urlencoded")
             .PostUrlEncodedAsync(formData);
-        Log.Debug("Posted POLYANET at ({Row}, {Column})", row, column);
+        Log.Debug("Posted SOLOON at ({Row}, {Column})", row, column);
+        return response;
+    }
+
+    public async Task<IFlurlResponse> DeleteComethAsync(
+        Url challengeUrl,
+        int row,
+        int column,
+        string candidateId
+    )
+    {
+        Url url = challengeUrl.AppendPathSegment(MegaverseStarsEnum.cometh.ToString());
+        var formData = new Dictionary<string, string>
+        {
+            { "row", row.ToString() },
+            { "column", column.ToString() },
+            { "candidateId", candidateId },
+        };
+
+        Log.Debug("Deleteing COMETH at ({Row}, {Column})", row, column);
+        var response = await FlurlClient
+            .Request(url)
+            .WithHeader("Accept", "application/x-www-form-urlencoded")
+            .DeleteUrlEncodedAsync(formData);
+        Log.Debug("Deleted COMETH at ({Row}, {Column})", row, column);
         return response;
     }
 }

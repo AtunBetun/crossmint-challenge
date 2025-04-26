@@ -5,6 +5,12 @@ using Serilog;
 
 namespace CrossmintChallenge.Host.Services;
 
+public enum StarActionEnum
+{
+    CREATE,
+    DELETE,
+}
+
 public class Processor
 {
     public static Url ChallengeUrl() => new Url("https://challenge.crossmint.io/api");
@@ -12,19 +18,21 @@ public class Processor
     public const string CandidateId = "9b5772ff-aa4e-4870-956c-9e0332789869";
 
     public MegaverseClient MegaverseMapClient { get; init; }
+    public MegaverseService MegaverseService { get; init; }
 
-    public Processor(MegaverseClient megaverseMapClient)
+    public Processor(MegaverseClient megaverseMapClient, MegaverseService megaverseService)
     {
         MegaverseMapClient = megaverseMapClient.NotNull();
+        MegaverseService = megaverseService.NotNull();
     }
 
-    // TODO:
+    // # Algorithm:
     // 1. Get the map goal
+    // 2. Get the map
     // While (Map != Goal)
-    //      2. get current map
-    //      3. Mapper => get Deletes and Posts
-    //      4. Loop doing Deletes and Posts
-    //
+    //      3. get current map
+    //      4. Mapper => get Deletes and Posts
+    //      5. Batch doing Deletes and Posts
 
     public async Task Execute(bool createTestScenario = true)
     {
@@ -71,6 +79,30 @@ public class Processor
         await CallPolyanetsAsync(polyanets, MegaverseMapClient.PostPolyanetAsync);
 
         Log.Information("end");
+    }
+
+    public async Task CallStarsAsync(
+        List<(int Row, int Col, GoalItem starGoal, StarActionEnum action)> stars,
+        int batchSize = 10
+    )
+    {
+        Log.Information("calling star {@stars}", stars);
+
+        for (int i = 0; i < stars.Count; i += batchSize)
+        {
+            var batch = stars.Skip(i).Take(batchSize).ToList();
+            var tasks = batch
+                .Select(starTask => starTask(ChallengeUrl(), starTask.Row, starTask.Col, CandidateId))
+                .ToList();
+
+            await Task.WhenAll(tasks);
+
+            if (i + batchSize < stars.Count)
+            {
+                Log.Information("Batch complete, waiting 1 seconds before next batch...");
+                await Task.Delay(TimeSpan.FromSeconds(1));
+            }
+        }
     }
 
     public async Task CallPolyanetsAsync(

@@ -1,7 +1,7 @@
+using System.Text.Json;
 using CrossmintChallenge.Clients;
 using CrossmintChallenge.Host;
 using CrossmintChallenge.Host.Services;
-using System.Text.Json;
 
 namespace CrossmintChallenge.Test;
 
@@ -20,9 +20,10 @@ public class MapperTests
     {
         var fileContent = File.ReadAllText(Path.Combine(TestProjectPath(), "Fixtures", "map.json"));
         var jsonDocument = JsonDocument.Parse(fileContent);
-        MapResponse mapResponse = JsonSerializer.Deserialize<MapResponse>(jsonDocument, SerializerFactory.CreateOptions()).NotNull();
+        MapResponse mapResponse = JsonSerializer
+            .Deserialize<MapResponse>(jsonDocument, SerializerFactory.CreateOptions())
+            .NotNull();
         MapGoalResponse mapGoalResponse = mapResponse.ToGoalResponse();
-
 
         Assert.Equal(GoalItem.BLUE_SOLOON, mapGoalResponse.Goal[1][1]);
         Assert.Equal(GoalItem.WHITE_SOLOON, mapGoalResponse.Goal[1][8]);
@@ -40,7 +41,5 @@ public class MapperTests
         Assert.Equal(GoalItem.SPACE, mapGoalResponse.Goal[0][0]);
         Assert.Equal(GoalItem.SPACE, mapGoalResponse.Goal[5][5]);
         Assert.Equal(GoalItem.SPACE, mapGoalResponse.Goal[15][15]);
-
     }
-
 }

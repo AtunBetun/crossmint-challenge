@@ -20,6 +20,7 @@ public static class HostBuilder
     {
         services.AddTransient<Processor>();
         services.AddTransient<MegaverseClient>();
+        services.AddTransient<MegaverseService>();
         services.AddTransient<PollyHandler>();
         services.AddHostedService<HostedService>();
         return services;
