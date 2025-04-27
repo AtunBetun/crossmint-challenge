@@ -28,7 +28,7 @@ public class Processor
     //      4. Mapper => get Deletes and Posts
     //      5. Batch doing Deletes and Posts
     //
-    public async Task Execute2(CancellationToken cancellationToken, bool createTestScenario = true)
+    public async Task Execute2(CancellationToken cancellationToken, bool createTestScenario = false)
     {
         Log.Information("starting processor");
 
