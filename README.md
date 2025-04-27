@@ -2,6 +2,8 @@
 
 This project is a C# console application that solves the Megaverse challenge. The algorithm aims to manipulate a map, adjusting it to match a predefined goal map, with a focus on handling API constraints and failures efficiently.
 
+I chose C# for the project given its the language I have most experience at my current SWE role.
+
 ## Algorithm
 
 1. **Get the map goal**
