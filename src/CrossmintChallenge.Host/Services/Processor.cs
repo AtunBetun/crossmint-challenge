@@ -32,7 +32,7 @@ public class Processor
     public async Task TestScenario()
     {
         Log.Information("seeding random stars for test scenario");
-        List<(int Row, int Col, GoalItem starGoal)> randomStars = Mapper.GetRandomStars(10000);
+        List<(int Row, int Col, GoalItem starGoal)> randomStars = Mapper.GetRandomStars(20000);
         List<Func<Task>> taskDelegates = randomStars
             .Select(x =>
                 (Func<Task>)(
