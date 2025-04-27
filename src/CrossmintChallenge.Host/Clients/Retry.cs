@@ -26,7 +26,7 @@ public static class Retry
         var retryPolicy = Policy<HttpResponseMessage>
             .HandleResult(result => IsTransientError(result))
             .WaitAndRetryAsync(
-                40,
+                200,
                 retryAttempt =>
                 {
                     var nextAttemptIn = TimeSpan.FromSeconds(1);
