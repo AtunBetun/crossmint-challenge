@@ -2,7 +2,11 @@ using Serilog;
 
 public static class Batch
 {
-    public static async Task RunBatchTasksAsync(List<Func<Task>> tasks, int batchSize = 10, int batchTimer = 10)
+    public static async Task RunBatchTasksAsync(
+        List<Func<Task>> tasks,
+        int batchSize = 10,
+        int batchTimer = 10
+    )
     {
         Log.Information("Running batch tasks");
 
@@ -14,7 +18,10 @@ public static class Batch
 
             if (i + batchSize < tasks.Count)
             {
-                Log.Information("Batch complete, waiting {@batchTime} second before next batch...", batchTimer);
+                Log.Information(
+                    "Batch complete, waiting {@batchTime} second before next batch...",
+                    batchTimer
+                );
                 await Task.Delay(TimeSpan.FromSeconds(batchTimer));
             }
         }

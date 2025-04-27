@@ -35,7 +35,9 @@ public class Processor
         if (createTestScenario)
         {
             Log.Information("seeding random stars for test scenario");
-            List<(int Row, int Col, GoalItem starGoal)> randomStars = Mapper.GetRandomPositions2(700);
+            List<(int Row, int Col, GoalItem starGoal)> randomStars = Mapper.GetRandomStars(
+                700
+            );
             List<Func<Task>> taskDelegates = randomStars
                 .Select(x =>
                     (Func<Task>)(
