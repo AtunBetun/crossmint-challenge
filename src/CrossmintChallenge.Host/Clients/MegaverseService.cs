@@ -13,19 +13,19 @@ public class MegaverseService
         MegaverseClient = megaverseClient.NotNull();
     }
 
-    public Task DeleteStar((int Row, int Col) location, Url challengeUrl, string candidateId)
+    public async Task DeleteStar((int Row, int Col) location, Url challengeUrl, string candidateId)
     {
         Log.Information("deleting star task {@location}", location);
-        Task task = MegaverseClient.DeletePolyanetAsync(
+        var task = MegaverseClient.DeletePolyanetAsync(
             challengeUrl,
             location.Row,
             location.Col,
             candidateId
         );
-        return task;
+        await task;
     }
 
-    public Task CreateStar(
+    public async Task CreateStar(
         GoalItem starGoal,
         (int Row, int Col) location,
         Url challengeUrl,
@@ -33,8 +33,8 @@ public class MegaverseService
     )
     {
         Log.Information("create star task {@starGoal} {@location}", starGoal, location);
-        Task task = starGoal.ToCreate(location, challengeUrl, candidateId, MegaverseClient);
-        return task;
+        var task = starGoal.ToCreate(location, challengeUrl, candidateId, MegaverseClient);
+        await task;
     }
 }
 

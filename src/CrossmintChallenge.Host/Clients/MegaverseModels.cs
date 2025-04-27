@@ -50,9 +50,9 @@ public enum DirectionEnum
 
 public enum MegaverseStarsEnum
 {
-    polyanet,
-    soloon,
-    cometh,
+    polyanets,
+    soloons,
+    comeths,
 }
 
 public record CellContent(int Type, DirectionEnum? Direction, ColorEnum? Color);

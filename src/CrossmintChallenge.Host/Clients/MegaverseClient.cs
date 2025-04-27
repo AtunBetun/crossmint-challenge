@@ -48,7 +48,7 @@ public class MegaverseClient
         string candidateId
     )
     {
-        Url url = challengeUrl.AppendPathSegment(MegaverseStarsEnum.polyanet.ToString());
+        Url url = challengeUrl.AppendPathSegment(MegaverseStarsEnum.polyanets.ToString());
         var formData = new Dictionary<string, string>
         {
             { "row", row.ToString() },
@@ -72,7 +72,7 @@ public class MegaverseClient
         string candidateId
     )
     {
-        Url url = challengeUrl.AppendPathSegment(MegaverseStarsEnum.polyanet.ToString());
+        Url url = challengeUrl.AppendPathSegment(MegaverseStarsEnum.polyanets.ToString());
         var formData = new Dictionary<string, string>
         {
             { "row", row.ToString() },
@@ -98,7 +98,7 @@ public class MegaverseClient
         string candidateId
     )
     {
-        Url url = challengeUrl.AppendPathSegment(MegaverseStarsEnum.soloon.ToString());
+        Url url = challengeUrl.AppendPathSegment(MegaverseStarsEnum.soloons.ToString());
         var formData = new Dictionary<string, string>
         {
             { "row", row.ToString() },
@@ -124,7 +124,7 @@ public class MegaverseClient
         string candidateId
     )
     {
-        Url url = challengeUrl.AppendPathSegment(MegaverseStarsEnum.cometh.ToString());
+        Url url = challengeUrl.AppendPathSegment(MegaverseStarsEnum.comeths.ToString());
         var formData = new Dictionary<string, string>
         {
             { "row", row.ToString() },

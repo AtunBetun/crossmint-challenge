@@ -35,20 +35,24 @@ public class Processor
         if (createTestScenario)
         {
             Log.Information("seeding random stars for test scenario");
-            List<(int Row, int Col, GoalItem starGoal)> randomStars = Mapper.GetRandomPositions2();
-            List<Task> tasks = randomStars
+            List<(int Row, int Col, GoalItem starGoal)> randomStars = Mapper.GetRandomPositions2(700);
+            List<Func<Task>> taskDelegates = randomStars
                 .Select(x =>
-                    MegaverseService.CreateStar(
-                        x.starGoal,
-                        (x.Row, x.Col),
-                        ChallengeUrl(),
-                        CandidateId
+                    (Func<Task>)(
+                        () =>
+                            MegaverseService.CreateStar(
+                                x.starGoal,
+                                (x.Row, x.Col),
+                                ChallengeUrl(),
+                                CandidateId
+                            )
                     )
                 )
                 .ToList()
                 .NotNull();
-            Log.Information("running {@taskCount}", tasks.Count);
-            // await Batch.RunBatchTasksAsync(tasks);
+
+            Log.Information("running {@taskCount}", taskDelegates.Count);
+            await Batch.RunBatchTasksAsync(taskDelegates);
         }
 
         // // Delete
