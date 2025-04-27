@@ -14,7 +14,7 @@ public class HostedService : IHostedService
 
     async Task IHostedService.StartAsync(CancellationToken cancellationToken)
     {
-        await Processor.Execute();
+        await Processor.Execute2(cancellationToken);
     }
 
     Task IHostedService.StopAsync(CancellationToken cancellationToken)

@@ -7,14 +7,13 @@ public enum GoalItem
     SPACE,
     POLYANET,
     BLUE_SOLOON,
-    DOWN_COMETH,
-    LEFT_COMETH,
     PURPLE_SOLOON,
     RED_SOLOON,
-    RIGHT_COMET,
-    RIGHT_COMETH,
-    UP_COMETH,
     WHITE_SOLOON,
+    UP_COMETH,
+    DOWN_COMETH,
+    LEFT_COMETH,
+    RIGHT_COMETH,
 }
 
 public record MapResponse(Map Map);

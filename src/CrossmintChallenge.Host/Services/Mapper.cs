@@ -4,7 +4,38 @@ namespace CrossmintChallenge.Host.Services;
 
 public static class Mapper
 {
-    public static List<(int Row, int Col)> GetRandomPositions(int count = 40, int gridSize = 11)
+    public static List<(int Row, int Col, GoalItem Item)> GetRandomPositions2(
+        int count = 40,
+        int gridSize = 30
+    )
+    {
+        var random = new Random();
+        var allPositions = new List<(int Row, int Col)>();
+
+        for (int row = 0; row < gridSize; row++)
+        {
+            for (int col = 0; col < gridSize; col++)
+            {
+                allPositions.Add((row, col));
+            }
+        }
+
+        var selectedPositions = allPositions.OrderBy(_ => random.Next()).Take(count).ToList();
+
+        var result = selectedPositions
+            .Select(pos =>
+                (
+                    pos.Row,
+                    pos.Col,
+                    (GoalItem)random.Next(1, Enum.GetValues(typeof(GoalItem)).Length)
+                )
+            ) // start from 1 to skip SPACE
+            .ToList();
+
+        return result;
+    }
+
+    public static List<(int Row, int Col)> GetRandomPositions(int count = 40, int gridSize = 30)
     {
         var random = new Random();
         var allPositions = new List<(int Row, int Col)>();

@@ -10,6 +10,6 @@ public class Program
         LogFactory.Create();
         Log.Information("starting host");
         IHost host = HostBuilder.CreateHost().Build();
-        await host.RunAsync();
+        await host.StartAsync();
     }
 }

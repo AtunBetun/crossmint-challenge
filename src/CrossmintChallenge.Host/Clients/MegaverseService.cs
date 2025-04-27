@@ -13,6 +13,18 @@ public class MegaverseService
         MegaverseClient = megaverseClient.NotNull();
     }
 
+    public Task DeleteStar((int Row, int Col) location, Url challengeUrl, string candidateId)
+    {
+        Log.Information("deleting star task {@location}", location);
+        Task task = MegaverseClient.DeletePolyanetAsync(
+            challengeUrl,
+            location.Row,
+            location.Col,
+            candidateId
+        );
+        return task;
+    }
+
     public Task CreateStar(
         GoalItem starGoal,
         (int Row, int Col) location,
@@ -104,4 +116,3 @@ public static class MegaverseServiceExtension
         };
     }
 }
-

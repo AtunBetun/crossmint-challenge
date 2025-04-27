@@ -116,30 +116,6 @@ public class MegaverseClient
         return response;
     }
 
-    public async Task<IFlurlResponse> DeleteSoloonAsync(
-        Url challengeUrl,
-        int row,
-        int column,
-        string candidateId
-    )
-    {
-        Url url = challengeUrl.AppendPathSegment(MegaverseStarsEnum.soloon.ToString());
-        var formData = new Dictionary<string, string>
-        {
-            { "row", row.ToString() },
-            { "column", column.ToString() },
-            { "candidateId", candidateId },
-        };
-
-        Log.Debug("Deleteing SOLOON at ({Row}, {Column})", row, column);
-        var response = await FlurlClient
-            .Request(url)
-            .WithHeader("Accept", "application/x-www-form-urlencoded")
-            .DeleteUrlEncodedAsync(formData);
-        Log.Debug("Deleted SOLOON at ({Row}, {Column})", row, column);
-        return response;
-    }
-
     public async Task<IFlurlResponse> PostComethAsync(
         Url challengeUrl,
         DirectionEnum direction,
@@ -163,30 +139,6 @@ public class MegaverseClient
             .WithHeader("Accept", "application/x-www-form-urlencoded")
             .PostUrlEncodedAsync(formData);
         Log.Debug("Posted SOLOON at ({Row}, {Column})", row, column);
-        return response;
-    }
-
-    public async Task<IFlurlResponse> DeleteComethAsync(
-        Url challengeUrl,
-        int row,
-        int column,
-        string candidateId
-    )
-    {
-        Url url = challengeUrl.AppendPathSegment(MegaverseStarsEnum.cometh.ToString());
-        var formData = new Dictionary<string, string>
-        {
-            { "row", row.ToString() },
-            { "column", column.ToString() },
-            { "candidateId", candidateId },
-        };
-
-        Log.Debug("Deleteing COMETH at ({Row}, {Column})", row, column);
-        var response = await FlurlClient
-            .Request(url)
-            .WithHeader("Accept", "application/x-www-form-urlencoded")
-            .DeleteUrlEncodedAsync(formData);
-        Log.Debug("Deleted COMETH at ({Row}, {Column})", row, column);
         return response;
     }
 }
