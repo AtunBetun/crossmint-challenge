@@ -4,6 +4,30 @@ namespace CrossmintChallenge.Host.Services;
 
 public static class Mapper
 {
+    public static List<(int Row, int Col, GoalItem Item)> StarsForUpdate(
+        MapGoalResponse goalMap,
+        MapGoalResponse currentMap
+    )
+    {
+        var differences = new List<(int Row, int Col, GoalItem Item)>();
+
+        for (int row = 0; row < goalMap.Goal.Count; row++)
+        {
+            for (int col = 0; col < goalMap.Goal[row].Count; col++)
+            {
+                var goalItem = goalMap.Goal[row][col];
+                var currentItem = currentMap.Goal[row][col];
+
+                if (goalItem != currentItem)
+                {
+                    differences.Add((row, col, goalItem));
+                }
+            }
+        }
+
+        return differences;
+    }
+
     public static List<(int Row, int Col, GoalItem Item)> GetRandomStars(
         int count = 40,
         int gridSize = 30

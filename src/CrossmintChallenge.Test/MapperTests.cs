@@ -2,6 +2,7 @@ using System.Text.Json;
 using CrossmintChallenge.Clients;
 using CrossmintChallenge.Host;
 using CrossmintChallenge.Host.Services;
+using Serilog;
 
 namespace CrossmintChallenge.Test;
 
@@ -14,6 +15,38 @@ public class MapperTests
 
     public static string TestProjectPath() =>
         Path.Combine(AppContext.BaseDirectory, "..", "..", "..");
+
+    [Fact]
+    public void StarsForUpdate()
+    {
+        var filledMapContent = File.ReadAllText(
+            Path.Combine(TestProjectPath(), "Fixtures", "filled_map.json")
+        );
+        var goalMapContent = File.ReadAllText(
+            Path.Combine(TestProjectPath(), "Fixtures", "goal.json")
+        );
+        var jsonFilledMap = JsonDocument.Parse(filledMapContent);
+        var jsonGoalMap = JsonDocument.Parse(goalMapContent);
+
+        MapGoalResponse filledMap = JsonSerializer
+            .Deserialize<MapResponse>(jsonFilledMap, SerializerFactory.CreateOptions())
+            .NotNull()
+            .ToGoalResponse();
+
+        MapGoalResponse goalMap = JsonSerializer
+            .Deserialize<MapGoalResponse>(jsonGoalMap, SerializerFactory.CreateOptions())
+            .NotNull();
+
+        Log.Debug("{@filledMap}", filledMap);
+        Log.Debug("{@goalMap}", goalMap);
+
+        var starsForUpdate = Mapper.StarsForUpdate(goalMap, filledMap);
+        Assert.NotNull(starsForUpdate);
+        Assert.Contains(starsForUpdate, s => s.Row == 0 && s.Col == 2 && s.Item == GoalItem.SPACE);
+        Assert.Contains(starsForUpdate, s => s.Row == 0 && s.Col == 5 && s.Item == GoalItem.SPACE);
+        Assert.Contains(starsForUpdate, s => s.Row == 0 && s.Col == 8 && s.Item == GoalItem.SPACE);
+        Assert.Contains(starsForUpdate, s => s.Row == 0 && s.Col == 14 && s.Item == GoalItem.SPACE);
+    }
 
     [Fact]
     public void ToGoalItem()
