@@ -4,6 +4,17 @@ This project is a C# console application that solves the Megaverse challenge. Th
 
 I chose C# for the project given its the language I have most experience at my current SWE role.
 
+## TODO
+[ ] task not exiting after run ends
+[ ] test scenarios (bool test, int starCount) as cli arguments
+[ ] singular binary output instead of docker build
+
+## How to run
+```bash
+    # Makefile contains the recipes for a docker build
+    $ make # build and runs the container
+```
+
 ## Simplifications / Additions if Need to Scale
 
 1. Options binding to set challengeUrl and candidateId
