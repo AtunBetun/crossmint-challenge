@@ -26,10 +26,10 @@ public class Processor
         return updates;
     }
 
-    public async Task TestScenario()
+    public async Task TestScenario(int starCount)
     {
         Log.Information("seeding random stars for test scenario");
-        List<(int Row, int Col, GoalItem starGoal)> randomStars = Mapper.GetRandomStars(20000);
+        List<(int Row, int Col, GoalItem starGoal)> randomStars = Mapper.GetRandomStars(starCount);
         List<Func<Task>> taskDelegates = randomStars
             .Select(x =>
                 (Func<Task>)(
@@ -57,13 +57,13 @@ public class Processor
     //      4. Mapper => get Deletes and Posts
     //      5. Batch doing Deletes and Posts
 
-    public async Task Execute(CancellationToken cancellationToken, bool createTestScenario = false)
+    public async Task Execute(CancellationToken cancellationToken, bool createTestScenario = true)
     {
         Log.Information("starting processor");
 
         if (createTestScenario)
         {
-            await TestScenario();
+            await TestScenario(50);
         }
 
         Log.Information("getting current map and goal");

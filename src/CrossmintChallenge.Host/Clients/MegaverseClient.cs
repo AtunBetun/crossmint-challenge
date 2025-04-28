@@ -6,7 +6,7 @@ using Serilog;
 
 namespace CrossmintChallenge.Clients;
 
-public class MegaverseClient
+public class MegaverseClient : IMegaverseClient
 {
     public IFlurlClient FlurlClient { get; init; }
 
