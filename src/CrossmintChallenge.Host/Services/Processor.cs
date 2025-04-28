@@ -10,20 +10,17 @@ public class Processor
 
     public const string CandidateId = "9b5772ff-aa4e-4870-956c-9e0332789869";
 
-    public MegaverseClient MegaverseClient { get; init; }
     public MegaverseService MegaverseService { get; init; }
 
-    public Processor(MegaverseClient megaverseMapClient, MegaverseService megaverseService)
+    public Processor(MegaverseService megaverseService)
     {
-        MegaverseClient = megaverseMapClient.NotNull();
         MegaverseService = megaverseService.NotNull();
     }
 
     public async Task<List<(int Row, int Col, GoalItem Item)>> StarsForUpdate()
     {
-        var goalMap = await MegaverseClient.GetMapGoalAsync(ChallengeUrl(), CandidateId);
-        var mapResponse = await MegaverseClient.GetMapAsync(ChallengeUrl(), CandidateId);
-        var currentMap = mapResponse.ToGoalResponse();
+        var goalMap = await MegaverseService.GoalMap(ChallengeUrl(), CandidateId);
+        var currentMap = await MegaverseService.CurrentMap(ChallengeUrl(), CandidateId);
 
         var updates = Mapper.StarsForUpdate(goalMap, currentMap);
         return updates;

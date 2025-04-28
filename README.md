@@ -4,6 +4,11 @@ This project is a C# console application that solves the Megaverse challenge. Th
 
 I chose C# for the project given its the language I have most experience at my current SWE role.
 
+## Simplifications / Additions if Need to Scale
+
+1. Options binding to set challengeUrl and candidateId
+    - Left these out for the code to be easy to understand 
+
 ## Algorithm
 
 1. **Get the map goal**

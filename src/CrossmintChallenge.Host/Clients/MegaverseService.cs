@@ -1,4 +1,5 @@
 using CrossmintChallenge.Host;
+using CrossmintChallenge.Host.Services;
 using Flurl;
 using Serilog;
 
@@ -6,11 +7,32 @@ namespace CrossmintChallenge.Clients;
 
 public class MegaverseService
 {
-    public MegaverseClient MegaverseClient { get; init; }
+    public IMegaverseClient MegaverseClient { get; init; }
 
-    public MegaverseService(MegaverseClient megaverseClient)
+    public MegaverseService(IMegaverseClient megaverseClient)
     {
         MegaverseClient = megaverseClient.NotNull();
+    }
+
+    public async Task<MapGoalResponse> GoalMap(Url challengeUrl, string candidateId) =>
+        await MegaverseClient.GetMapGoalAsync(challengeUrl, candidateId);
+
+    public async Task<MapGoalResponse> CurrentMap(Url challengeUrl, string candidateId)
+    {
+        var result = await MegaverseClient.GetMapAsync(challengeUrl, candidateId);
+        return result.ToGoalResponse();
+    }
+
+    public async Task GoalMap((int Row, int Col) location, Url challengeUrl, string candidateId)
+    {
+        Log.Information("deleting star task {@location}", location);
+        var task = MegaverseClient.DeletePolyanetAsync(
+            challengeUrl,
+            location.Row,
+            location.Col,
+            candidateId
+        );
+        await task;
     }
 
     public async Task DeleteStar((int Row, int Col) location, Url challengeUrl, string candidateId)
@@ -45,7 +67,7 @@ public static class MegaverseServiceExtension
         (int Row, int Col) location,
         Url challengeUrl,
         string candidateId,
-        MegaverseClient megaverseClient
+        IMegaverseClient megaverseClient
     )
     {
         return starGoal switch
