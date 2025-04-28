@@ -12,7 +12,7 @@ public class IntegrationTests
         LogFactory.Create();
     }
 
-    [Fact]
+    [Fact(Skip = "not for CI")]
     public async Task GetMapGoal()
     {
         var builder = Setup.Builder().Build();
@@ -21,7 +21,7 @@ public class IntegrationTests
         var result = await client.GetMapGoalAsync(Processor.ChallengeUrl(), Processor.CandidateId);
     }
 
-    [Fact]
+    [Fact(Skip = "not for CI")]
     public async Task GetMap()
     {
         var builder = Setup.Builder().Build();
